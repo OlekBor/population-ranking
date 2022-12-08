@@ -1,5 +1,6 @@
 from api_connector import RandomDataAPI as randAPI
 from api_connector import CountriesAPI
+from country import Country
 
 def user_input(lim: tuple[int, int]):
     lim_str = "[{} {})".format(*lim)
@@ -9,32 +10,34 @@ def user_input(lim: tuple[int, int]):
     return quantity
 
 def search_country_info(country: str):
+    country_orig = country
     country = country.lower()
     search_results = CountriesAPI().name_search(country.split(" ")[0])
-    if len(search_results) == 1:
+    if isinstance(search_results, dict):
+        print(f"Country not found: {country}")
+        return None
+    if len(search_results) == 1 or \
+        country == 'Saint Barthelemy':
         return search_results[0]
+    
     for result in search_results:
-        if result['name']['common'].lower() == country or result['name']['official'].lower() == country:
+        if result['name']['common'].lower() == country or \
+            result['name']['official'].lower() == country or \
+            country_orig in result['altSpellings']:
             return result
-    print(f"Country not found: {country}")
-    return -1
 
 def present(countries: list):
-    for country_info in countries:
-        print(f"{country_info['name']['common']}:")
-        print(f"\t{country_info['capital'][0]}")
-        print(f"\t{country_info['population']}")
-        print(f"\t{list(country_info['languages'].values())}")
-        print()
+    for country in countries:
+        country.display()
 
 def main():
     quantity = user_input((5, 21))
     countries_names = randAPI().n_random_countries(quantity)
     print(f"Random countries: {countries_names}\n")
 
-    countries_details = [search_country_info(country) for country in countries_names]
-    countries_details = sorted(countries_details, key=lambda country: country["population"], reverse=True)
-    present(countries_details)
+    countries_collection = [Country(country, search_country_info(country)) for country in countries_names]
+    countries_collection = sorted(countries_collection, key=lambda country: country.get_population(), reverse=True)
+    present(countries_collection)
 
 if __name__ == "__main__":
     main()
