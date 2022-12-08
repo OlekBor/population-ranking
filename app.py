@@ -1,14 +1,4 @@
-from api_connector import RandomDataAPI
-
-def n_random_countries(quantity: int):
-    random_data_api = RandomDataAPI()
-    countries = []
-    while len(countries) < quantity:
-        country = random_data_api.new_random_address()['country']
-        if country in countries:
-            continue
-        countries.append(country)
-    return countries
+from api_connector import RandomDataAPI as randAPI
 
 def user_input(lim: tuple[int, int]):
     lim_str = "[{} {})".format(*lim)
@@ -19,7 +9,7 @@ def user_input(lim: tuple[int, int]):
 
 def main():
     quantity = user_input((5, 21))
-    countries = n_random_countries(quantity)
+    countries = randAPI().n_random_countries(quantity)
     print(countries)
 
 if __name__ == "__main__":
