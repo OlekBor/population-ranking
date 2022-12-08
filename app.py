@@ -19,10 +19,22 @@ def search_country_info(country: str):
     print(f"Country not found: {country}")
     return -1
 
+def present(countries: list):
+    for country_info in countries:
+        print(f"{country_info['name']['common']}:")
+        print(f"\t{country_info['capital'][0]}")
+        print(f"\t{country_info['population']}")
+        print(f"\t{list(country_info['languages'].values())}")
+        print()
+
 def main():
     quantity = user_input((5, 21))
-    countries = randAPI().n_random_countries(quantity)
-    print(countries)
+    countries_names = randAPI().n_random_countries(quantity)
+    print(f"Random countries: {countries}\n")
+
+    countries_details = [search_country_info(country) for country in countries_names]
+    countries_details = sorted(countries_details, key=lambda country: country["population"], reverse=True)
+    present(countries)
 
 if __name__ == "__main__":
     main()
