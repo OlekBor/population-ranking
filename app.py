@@ -30,11 +30,11 @@ def present(countries: list):
 def main():
     quantity = user_input((5, 21))
     countries_names = randAPI().n_random_countries(quantity)
-    print(f"Random countries: {countries}\n")
+    print(f"Random countries: {countries_names}\n")
 
     countries_details = [search_country_info(country) for country in countries_names]
     countries_details = sorted(countries_details, key=lambda country: country["population"], reverse=True)
-    present(countries)
+    present(countries_details)
 
 if __name__ == "__main__":
     main()
