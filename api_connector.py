@@ -20,6 +20,15 @@ class RandomDataAPI(APIConnector):
         request_result = self.get("addresses")
         return request_result.json()
 
+    def n_random_countries(self, quantity: int):
+        countries = []
+        while len(countries) < quantity:
+            country = self.new_random_address()['country']
+            if country in countries:
+                continue
+            countries.append(country)
+        return countries
+
 class CountriesAPI(APIConnector):
 
     def __init__(self, base_uri='https://restcountries.com/v3.1/'):
@@ -29,8 +38,4 @@ class CountriesAPI(APIConnector):
         return self.get(f"name/{name}").json()
 
 if __name__ == "__main__":
-    api_response = CountriesAPI().name_search("asdf")
-    try:
-        print(api_response[0]["population"])
-    except KeyError:
-        print("No information found")
+    print(RandomDataAPI().n_random_countries(7))
