@@ -14,7 +14,9 @@ def search_country_info(country: str):
     if len(search_results) == 1:
         return search_results[0]
     for result in search_results:
-        if result['name']['common'].lower() == country or result['name']['official'].lower() == country:
+        if country in result['name']['common'].lower() or country in result['name']['official'].lower():
+            return result
+        if result['name']['common'].lower() == country.split(',')[0] or result['name']['official'].lower() == country.split(',')[0]:
             return result
     print(f"Country not found: {country}")
     return -1
@@ -34,7 +36,7 @@ def main():
 
     countries_details = [search_country_info(country) for country in countries_names]
     countries_details = sorted(countries_details, key=lambda country: country["population"], reverse=True)
-    present(countries)
+    present(countries_details)
 
 if __name__ == "__main__":
     main()
