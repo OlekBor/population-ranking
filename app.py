@@ -1,4 +1,5 @@
 from api_connector import RandomDataAPI as randAPI
+from api_connector import CountriesAPI
 
 def user_input(lim: tuple[int, int]):
     lim_str = "[{} {})".format(*lim)
@@ -6,6 +7,17 @@ def user_input(lim: tuple[int, int]):
     while quantity not in range(*lim):
         quantity = int(input(f"Wrong input, try again in range {lim_str} [or Ctrl+D to exit]: "))
     return quantity
+
+def search_country_info(country: str):
+    country = country.lower()
+    search_results = CountriesAPI().name_search(country.split(" ")[0])
+    if len(search_results) == 1:
+        return search_results[0]
+    for result in search_results:
+        if result['name']['common'].lower() == country or result['name']['official'].lower() == country:
+            return result
+    print(f"Country not found: {country}")
+    return -1
 
 def main():
     quantity = user_input((5, 21))
