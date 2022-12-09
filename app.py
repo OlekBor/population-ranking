@@ -13,9 +13,10 @@ def search_country_info(country: str):
     country_orig = country
     country = country.lower()
     search_results = CountriesAPI().name_search(country.split(" ")[0])
-    if isinstance(search_results, dict):
+    if isinstance(search_results, dict) and ('status', 404) in search_results.items():
         print(f"Country not found: {country}")
         return None
+    
     if len(search_results) == 1 or \
         country == 'Saint Barthelemy':
         return search_results[0]
