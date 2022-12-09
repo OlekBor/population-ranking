@@ -12,22 +12,23 @@ class Country:
     def get_capital(self):
         if not self.json:
             return "No information found!"
-        if "Antarctica" in self.name:
-            return "No capital"
-        if self.json["capital"]:
+        try:
             return self.json["capital"][0]
+        except KeyError:
+            return "No information found!"
 
     def get_population(self):
+        if not self.json:
+            return 0
         try:
-            if not self.json:
-                return 0
-            if self.json["population"]:
-                return self.json["population"]
-        except Exception as t:
-            print(f"{t}\n{self.name}")
+            return self.json["population"]
+        except KeyError:
+            return 0
 
     def get_languages(self):
         if not self.json:
             return "No information found!"
-        if any(self.json["languages"].values()):
+        try:
             return list(self.json["languages"].values())
+        except KeyError:
+            return "No information found!"
